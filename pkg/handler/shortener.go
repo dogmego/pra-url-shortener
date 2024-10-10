@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	urlStore = make(map[string]string)
-	mu       sync.RWMutex
+	UrlStore = make(map[string]string)
+	Mu       sync.RWMutex
 )
 
 func HandleRedirect(w http.ResponseWriter, r *http.Request) {
@@ -19,9 +19,9 @@ func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	mu.RLock()
-	longURL, ok := urlStore[shortID]
-	mu.RUnlock()
+	Mu.RLock()
+	longURL, ok := UrlStore[shortID]
+	Mu.RUnlock()
 
 	if !ok {
 		http.Error(w, "Not Found", http.StatusNotFound)
@@ -46,9 +46,9 @@ func HandleShortenURL(w http.ResponseWriter, r *http.Request) {
 
 	shortID := GenerateShortID(longURL)
 
-	mu.Lock()
-	urlStore[shortID] = longURL
-	mu.Unlock()
+	Mu.Lock()
+	UrlStore[shortID] = longURL
+	Mu.Unlock()
 
 	shortURL := "http://localhost:8085/" + shortID
 
